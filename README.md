@@ -8,7 +8,7 @@ class note for DataCamp
 `df.index = pd.to_datetime(df.index)`
 
 ### Plotting data
-#### Plot 2012 data using slicing
+Plot 2012 data using slicing
 `df['2012'].plot()`
 
 ### Join data
