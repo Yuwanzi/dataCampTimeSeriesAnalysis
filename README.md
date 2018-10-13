@@ -98,7 +98,7 @@ result = sm.OLS(y,x).fit()
 ~~~
 The correlation is the square root of the R-squared, not the R-squared.
 
-# Autocorrelation
+## Autocorrelation
 correlation of a time series with a lagged copy of itself.
 Negative Autocorrelation -> mean reverting
 Positive Autocorrelation -> Momentum or Trend following
@@ -111,7 +111,7 @@ returns = MSFT.pct_change()
 autocorrelation = returns['Adj Close'].autocorr()
 print("The autocorrelation of weekly returns is %4.2f" %(autocorrelation))
 ~~~
-#Autocorrelation Function
+## Autocorrelation Function
 ~~~
 from statsmodels.tsa.stattools import acf
 from statsmodels.graphics.tsaplots import plot_acf
@@ -122,7 +122,7 @@ print(acf_array)
 plot_acf(HRB, alpha=1)
 plt.show()
 ~~~ 
-### negative means mean reverting
+#### negative means mean reverting
 ~~~
 # Import the plot_acf module from statsmodels and sqrt from math
 from statsmodels.graphics.tsaplots import plot_acf
@@ -138,7 +138,7 @@ conf = 1.96/sqrt(nobs)
 print("The approximate confidence interval is +/- %4.2f" %(conf))
 ~~~
 
-# White Noise (Can't forcast white noise)
+## White Noise (Can't forcast white noise)
 #### stock return are useally white noise, for the white noise, we cannot forcast future observations based on the past autocrrelations at all lags are zero.
 ~~~
 # Import the plot_acf module from statsmodels
@@ -160,7 +160,7 @@ plt.show()
 plot_acf(returns, lags=20)
 plt.show()
 ~~~
-# Random Walk
+## Random Walk
 Whereas stock returns are often modelled as white noise, stock prices closely follow a random walk. In other words, today's price is yesterday's price plus some random noise.
 ~~~
 # Generate 500 random steps with mean=0 and standard deviation=1
