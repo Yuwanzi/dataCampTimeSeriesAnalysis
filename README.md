@@ -177,6 +177,7 @@ plt.plot(P)
 plt.title("Simulated Random Walk")
 plt.show()
 ~~~
+
 Now you will make the noise multiplicative: you will add one to the random, normal changes to get a total return, and multiply that by the last price.
 np.cumprod: Cumulate the product of the steps 
 
@@ -197,7 +198,7 @@ plt.title("Simulated Random Walk with Drift")
 
 With the ADF test, the "null hypothesis" (the hypothesis that we either reject or fail to reject) is that the series follows a random walk. Therefore, a low p-value (say less than 5%) means we can reject the null hypothesis that the series is a random walk.
 
-~~~~
+~~~
 # Import the adfuller module from statsmodels
 from statsmodels.tsa.stattools import adfuller
 
@@ -208,7 +209,6 @@ print(results)
 # Just print out the p-value
 print('The p-value of the test on prices is: ' + str(results[1]))
 ~~~
-
 
 If we want to check whether a stock return(% change in price) follows Random Walk, we should run Augmented Dickey-Fuller test. 
 
@@ -267,7 +267,6 @@ ma2 = np.array([1])
 AR_object2 = ArmaProc
 ~~~
 
-
 # Compare the ACF for Several AR Time Series
 The autocorrelation function decays exponentially for an AR time series at a rate of the AR parameter. For example, if the AR parameter, ϕ=+0.9ϕ=+0.9, the first-lag autocorrelation will be 0.9, the second-lag will be (0.9)2=0.81(0.9)2=0.81, the third-lag will be (0.9)3=0.729(0.9)3=0.729, etc. A smaller AR parameter will have a steeper decay, and for a negative AR parameter, say -0.9, the decay will flip signs, so the first-lag autocorrelation will be -0.9, the second-lag will be (−0.9)2=0.81(−0.9)2=0.81, the third-lag will be (−0.9)3=−0.729(−0.9)3=−0.729, etc.
 ### Compare the ACF for Several AR Time Series
@@ -282,8 +281,6 @@ plt.show()
 # Plot 2: AR parameter = -0.9
 plot_acf(simulated_data_2, alpha=1, lags=20)
 plt.show()
-~~~
-
 
 # Plot 3: AR parameter = +0.3
 plot_acf(simulated_data_3, alpha=1, lags=20)
