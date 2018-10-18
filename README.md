@@ -138,7 +138,7 @@ conf = 1.96/sqrt(nobs)
 print("The approximate confidence interval is +/- %4.2f" %(conf))
 ~~~
 
-#White Noise (Can't forcast white noise)
+# White Noise (Can't forcast white noise)
 #### stock return are useally white noise, for the white noise, we cannot forcast future observations based on the past autocrrelations at all lags are zero.
 ~~~
 # Import the plot_acf module from statsmodels
@@ -160,7 +160,7 @@ plt.show()
 plot_acf(returns, lags=20)
 plt.show()
 ~~~
-#Random Walk
+# Random Walk
 Whereas stock returns are often modelled as white noise, stock prices closely follow a random walk. In other words, today's price is yesterday's price plus some random noise.
 ~~~
 # Generate 500 random steps with mean=0 and standard deviation=1
@@ -179,6 +179,7 @@ plt.show()
 ~~~
 Now you will make the noise multiplicative: you will add one to the random, normal changes to get a total return, and multiply that by the last price.
 np.cumprod: Cumulate the product of the steps 
+
 ~~~
 # Generate 500 random steps
 steps = np.random.normal(loc=0.001, scale=0.01, size=500) + 1
@@ -193,7 +194,9 @@ P = 100 * np.cumprod(steps)
 plt.plot(P)
 plt.title("Simulated Random Walk with Drift")
 ~~~
+
 With the ADF test, the "null hypothesis" (the hypothesis that we either reject or fail to reject) is that the series follows a random walk. Therefore, a low p-value (say less than 5%) means we can reject the null hypothesis that the series is a random walk.
+
 ~~~~
 # Import the adfuller module from statsmodels
 from statsmodels.tsa.stattools import adfuller
@@ -206,7 +209,9 @@ print(results)
 print('The p-value of the test on prices is: ' + str(results[1]))
 ~~~
 
+
 If we want to check whether a stock return(% change in price) follows Random Walk, we should run Augmented Dickey-Fuller test. 
+
 ~~~
 # Import the adfuller module from statsmodels
 from statsmodels.tsa.stattools import adfuller
@@ -221,9 +226,10 @@ AMZN_ret = AMZN_ret.dropna()
 results = adfuller(AMZN_ret['Adj Close'])
 print('The p-value of the test on returns is: ' + str(results[1]))
 ~~~
+
 ## Seasonal Adjustment During Tax Season
-~~~~
-# Import the plot_acf module from statsmodels
+~~~
+#Import the plot_acf module from statsmodels
 from statsmodels.graphics.tsaplots import plot_acf
 
 # Seasonally adjust quarterly earnings
