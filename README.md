@@ -98,7 +98,7 @@ result = sm.OLS(y,x).fit()
 ~~~
 The correlation is the square root of the R-squared, not the R-squared.
 
-## Autocorrelation
+#Autocorrelation
 correlation of a time series with a lagged copy of itself.
 Negative Autocorrelation -> mean reverting
 Positive Autocorrelation -> Momentum or Trend following
@@ -111,7 +111,7 @@ returns = MSFT.pct_change()
 autocorrelation = returns['Adj Close'].autocorr()
 print("The autocorrelation of weekly returns is %4.2f" %(autocorrelation))
 ~~~
-## Autocorrelation Function
+#Autocorrelation Function
 ~~~
 from statsmodels.tsa.stattools import acf
 from statsmodels.graphics.tsaplots import plot_acf
@@ -122,7 +122,7 @@ print(acf_array)
 plot_acf(HRB, alpha=1)
 plt.show()
 ~~~ 
-#### negative means mean reverting
+### negative means mean reverting
 ~~~
 # Import the plot_acf module from statsmodels and sqrt from math
 from statsmodels.graphics.tsaplots import plot_acf
@@ -138,7 +138,7 @@ conf = 1.96/sqrt(nobs)
 print("The approximate confidence interval is +/- %4.2f" %(conf))
 ~~~
 
-## White Noise (Can't forcast white noise)
+#White Noise (Can't forcast white noise)
 #### stock return are useally white noise, for the white noise, we cannot forcast future observations based on the past autocrrelations at all lags are zero.
 ~~~
 # Import the plot_acf module from statsmodels
@@ -160,7 +160,7 @@ plt.show()
 plot_acf(returns, lags=20)
 plt.show()
 ~~~
-## Random Walk
+#Random Walk
 Whereas stock returns are often modelled as white noise, stock prices closely follow a random walk. In other words, today's price is yesterday's price plus some random noise.
 ~~~
 # Generate 500 random steps with mean=0 and standard deviation=1
@@ -193,3 +193,142 @@ P = 100 * np.cumprod(steps)
 plt.plot(P)
 plt.title("Simulated Random Walk with Drift")
 ~~~
+With the ADF test, the "null hypothesis" (the hypothesis that we either reject or fail to reject) is that the series follows a random walk. Therefore, a low p-value (say less than 5%) means we can reject the null hypothesis that the series is a random walk.
+~~~~
+# Import the adfuller module from statsmodels
+from statsmodels.tsa.stattools import adfuller
+
+# Run the ADF test on the price series and print out the results
+results = adfuller(AMZN['Adj Close'])
+print(results)
+
+# Just print out the p-value
+print('The p-value of the test on prices is: ' + str(results[1]))
+~~~
+
+If we want to check whether a stock return(% change in price) follows Random Walk, we should run Augmented Dickey-Fuller test. 
+~~~
+# Import the adfuller module from statsmodels
+from statsmodels.tsa.stattools import adfuller
+
+# Create a DataFrame of AMZN returns
+AMZN_ret = AMZN.pct_change()
+
+# Eliminate the NaN in the first row of returns
+AMZN_ret = AMZN_ret.dropna()
+
+# Run the ADF test on the return series and print out the p-value
+results = adfuller(AMZN_ret['Adj Close'])
+print('The p-value of the test on returns is: ' + str(results[1]))
+~~~
+## Seasonal Adjustment During Tax Season
+~~~~
+# Import the plot_acf module from statsmodels
+from statsmodels.graphics.tsaplots import plot_acf
+
+# Seasonally adjust quarterly earnings
+HRBsa = HRB.diff(4)
+
+# Print the first 10 rows of the seasonally adjusted series
+print(HRBsa.head(10))
+
+# Drop the NaN data in the first three three rows
+HRBsa = HRBsa.dropna()
+
+# Plot the autocorrelation function of the seasonally adjusted series
+plot_acf(HRBsa)
+plt.show()
+~~~
+
+# Describe AR Model (ArmaProcess)
+## Simulate AR(1) Time Series
+~~~
+# import the module for simulating data
+from statsmodels.tsa.arima_process import ArmaProcess
+
+# Plot 1: AR parameter = +0.9
+plt.subplot(2,1,1)
+ar1 = np.array([1, -0.9])
+ma1 = np.array([1])
+AR_object1 = ArmaProcess(ar1, ma1)
+simulated_data_1 = AR_object1.generate_sample(nsample=1000)
+plt.plot(simulated_data_1)
+
+# Plot 2: AR parameter = -0.9
+plt.subplot(2,1,2)
+ar2 = np.array([1, 0.9])
+ma2 = np.array([1])
+AR_object2 = ArmaProc
+~~~
+
+
+# Compare the ACF for Several AR Time Series
+The autocorrelation function decays exponentially for an AR time series at a rate of the AR parameter. For example, if the AR parameter, ϕ=+0.9ϕ=+0.9, the first-lag autocorrelation will be 0.9, the second-lag will be (0.9)2=0.81(0.9)2=0.81, the third-lag will be (0.9)3=0.729(0.9)3=0.729, etc. A smaller AR parameter will have a steeper decay, and for a negative AR parameter, say -0.9, the decay will flip signs, so the first-lag autocorrelation will be -0.9, the second-lag will be (−0.9)2=0.81(−0.9)2=0.81, the third-lag will be (−0.9)3=−0.729(−0.9)3=−0.729, etc.
+### Compare the ACF for Several AR Time Series
+~~~
+# Import the plot_acf module from statsmodels
+from statsmodels.graphics.tsaplots import plot_acf
+
+# Plot 1: AR parameter = +0.9
+plot_acf(simulated_data_1, alpha=1, lags=20)
+plt.show()
+
+# Plot 2: AR parameter = -0.9
+plot_acf(simulated_data_2, alpha=1, lags=20)
+plt.show()
+~~~
+
+
+# Plot 3: AR parameter = +0.3
+plot_acf(simulated_data_3, alpha=1, lags=20)
+plt.show()
+~~~
+
+## Estimating an AR Model
+~~~
+# Import the ARMA module from statsmodels
+from statsmodels.tsa.arima_model import ARMA
+
+# Fit an AR(1) model to the first simulated data
+mod = ARMA(simulated_data_1, order=(1,0))
+res = mod.fit()
+
+# Print out summary information on the fit
+print(res.summary())
+
+# Print out the estimate for the constant and for phi
+print("When the true phi=0.9, the estimate of phi (and the constant) are:")
+print(res.params)
+~~~
+
+## Forecasting with an AR Model
+~~~
+# Import the ARMA module from statsmodels
+from statsmodels.tsa.arima_model import ARMA
+
+# Forecast the first AR(1) model
+mod = ARMA(simulated_data_1, order=(1,0))
+res = mod.fit()
+res.plot_predict(start=990, end=1010)
+plt.show()
+~~~
+## Forecasting intrest rate
+~~~
+# Import the ARMA module from statsmodels
+from statsmodels.tsa.arima_model import ARMA
+
+# Forecast interest rates using an AR(1) model
+mod = ARMA(interest_rate_data, order=(1,0))
+res = mod.fit()
+
+# Plot the original series and the forecasted series
+res.plot_predict(start=0,end ='2022')
+plt.legend(fontsize=8)
+plt.show()
+~~~
+# Chosing the Right Model
+Identifying the order of an AR Model
+The order of an AR(p) model will usually be unknown
+Two techniques to determine order
+-- Partial Autocorrelation Function (partial ACF)
+-- Information criteria
